@@ -1,13 +1,19 @@
 import { Router } from 'express';
 
 import * as profileController from '../controllers/profileController';
+import { authenticatedMiddleware, validateRequest } from '../middlewares';
+import {
+  updatePasswordValidation,
+  updateProfileValidation,
+  updateRoleValidation
+} from '../validations/profileValidations';
 
 const profileRouter = Router();
 
-profileRouter.get('/whoami', profileController.whoAmI);
-profileRouter.get('/update-profile', profileController.updateProfile);
-profileRouter.get('/update-password', profileController.updatePassword);
-profileRouter.get('/update-role', profileController.updateRole);
-profileRouter.get('/invite-user', profileController.inviteUser);
+profileRouter.get('/', authenticatedMiddleware, profileController.whoAmI);
+profileRouter.patch('/', updateProfileValidation, validateRequest, authenticatedMiddleware, profileController.updateProfile);
+profileRouter.patch('/password', updatePasswordValidation, validateRequest, authenticatedMiddleware, profileController.updatePassword);
+profileRouter.patch('/role', updateRoleValidation, validateRequest, authenticatedMiddleware, profileController.updateRole);
+// profileRouter.post('/invite-user', authenticatedMiddleware, profileController.inviteUser);
 
 export default profileRouter;
