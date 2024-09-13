@@ -8,16 +8,19 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
+
+dotenv.config();
 
 import reservationsRoutes from './routes/reservationsRoutes';
+import companiesRoutes from './routes/companiesRoutes';
 import servicesRoutes from './routes/servicesRoutes';
 import profileRoutes from './routes/profileRoutes';
 import sharedRoutes from './routes/sharedRoutes';
 import authRoutes from './routes/authRoutes';
 import { errorMiddleware } from './middlewares';
 import { AppDataSource } from './data-source';
-
-dotenv.config();
+import swaggerSpec from './swaggerConfig';
 
 (async () => {
   const app = express();
@@ -55,8 +58,11 @@ dotenv.config();
   app.use('/reservations', reservationsRoutes);
   app.use('/shared', sharedRoutes);
   app.use('/services', servicesRoutes);
+  app.use('/companies', companiesRoutes);
 
   app.get('/', (_, res) => res.send('🚀 The server is running smoothly! 🌟'));
   app.get('/health', (_, res) => res.send({ database: AppDataSource.isInitialized }));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
   app.listen(PORT, () => console.log(`🚀🎉 The server is up and running on port ${PORT}! 🎉🚀`));
 })();
