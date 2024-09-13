@@ -1,6 +1,13 @@
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
+import handlebars from 'handlebars';
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
+import path from 'path';
+import fs from 'fs';
+
+import { EmailTemplate } from './types/enums';
 import { UserPayload } from './models/User';
+import { transporter } from './mailer';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'my_secret_key';
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'my_refresh_token_secret';
@@ -14,10 +21,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'my_refresh_tok
  * @param status - The HTTP status code to be used for the response. Defaults to 200.
  */
 export const sendResponse = <T>(res: Response, message: string, data: T, status = 200) => {
-  return res.status(status).json({
-    message,
-    data
-  })
+  return res.status(status).json({ message, data })
 }
 
 /**
@@ -30,7 +34,11 @@ export const sendResponse = <T>(res: Response, message: string, data: T, status 
  * @example
  * const token = generateToken({ userId: 1 }, '1h');
  */
-export function generateToken(payload: UserPayload, type: 'access' | 'refresh'  = 'access', expiresIn = '1h'): string {
+export function generateToken(
+  payload: UserPayload,
+  type: 'access' | 'refresh' | 'verify' | 'reset' = 'access',
+  expiresIn = '1h'
+): string {
   const secret = type === 'access' ? JWT_SECRET : REFRESH_TOKEN_SECRET;
   if (type === 'refresh') expiresIn = '30d';
   return jwt.sign(payload, secret, { expiresIn });
@@ -45,9 +53,12 @@ export function generateToken(payload: UserPayload, type: 'access' | 'refresh'  
  * @example
  * const payload = decodeToken('your_jwt_token');
  */
-export function decodeToken(token: string): UserPayload | null {
+export const decodeToken = (
+  token: string,
+  type: 'access' | 'refresh' | 'verify' | 'reset' = 'access'
+): UserPayload | null => {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, type == 'access' ? JWT_SECRET : REFRESH_TOKEN_SECRET);
     return decoded as UserPayload;
   } catch (error) {
     return null;
@@ -68,12 +79,63 @@ export function decodeToken(token: string): UserPayload | null {
  *   console.log('Token is invalid or expired:', result.error);
  * }
  */
-export function verifyToken(token: string): boolean {
+export const verifyToken = (
+  token: string,
+  type: 'access' | 'refresh' | 'verify' | 'reset' = 'access'
+): boolean => {
   try {
     // Verify the token using the secret
-    jwt.verify(token, JWT_SECRET);
+    jwt.verify(token, type == 'access' ? JWT_SECRET : REFRESH_TOKEN_SECRET);
     return true;
   } catch (error) {
     return false;
   }
+}
+
+/**
+ * Compiles a Handlebars template with the given context.
+ * 
+ * @param templateName - Name of the template to compile.
+ * @param context - Object containing the context to be passed to the template.
+ * @returns The compiled template as a string.
+ * 
+ * @example
+ * const context = { name: 'John Doe' };
+ * const html = compileTemplate('welcome', context);
+ * console.log(html); // '<p>Hello, John Doe!</p>'
+ */
+export const compileTemplate = (templateName: EmailTemplate, context: any): string => {
+  const templatePath = path.resolve('./src/templates', `${templateName}.hbs`);
+  const templateSource = fs.readFileSync(templatePath, 'utf-8');
+  const template = handlebars.compile(templateSource);
+  return template(context);
+}
+
+/**
+ * Sends an email using the nodemailer transporter.
+ * 
+ * @param to - The email address of the recipient.
+ * @param subject - The subject of the email.
+ * @param templateName - The name of the email template to use.
+ * @param context - An object containing the data to be used in the email template.
+ * @returns A Promise resolving to an object containing the sent message information.
+ * 
+ * @example
+ * const sent = await sendEmail('user@example.com', 'Hello', 'hello-email', { name: 'John Doe' });
+ * console.log('Email sent:', sent);
+ */
+export const sendEmail = async (
+  to: string,
+  subject: string,
+  templateName: EmailTemplate,
+  context: any
+): Promise<SMTPTransport.SentMessageInfo> => {
+  const html = compileTemplate(templateName, context);
+
+  return await transporter.sendMail({
+    from: process.env.SMTP_FROM,
+    to,
+    subject,
+    html,
+  });
 }
