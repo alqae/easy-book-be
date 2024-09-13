@@ -1,11 +1,11 @@
-import { Entity, ObjectIdColumn, ObjectId, Column } from 'typeorm'
+import { Entity, ObjectIdColumn, ObjectId, Column } from 'typeorm';
 
 import { UserRole, UserStatus } from '../types/enums';
 
 @Entity('users')
 export class User {
     @ObjectIdColumn()
-    id: ObjectId
+    id: ObjectId;
   
     @Column({ nullable: true })
     firstName?: string;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import * as authController from '../controllers/authController';
 import { authenticatedMiddleware, guestMiddleware, validateRequest } from '../middlewares';
+import * as authController from '../controllers/authController';
 import {
   authenticateValidation,
   registerValidation,
@@ -24,9 +24,9 @@ authRouter.post('/login', authenticateValidation, validateRequest, guestMiddlewa
 authRouter.post('/logout', authenticatedMiddleware, authController.logout);
 authRouter.post('/refresh-token', authenticatedMiddleware, authController.refreshToken);
 authRouter.post('/register', registerValidation, validateRequest, guestMiddleware, authController.register);
-authRouter.post('/forgot-password', forgotPasswordValidation, validateRequest, authController.forgotPassword);
-authRouter.post('/reset-password', resetPasswordValidation, validateRequest, authController.resetPassword);
-authRouter.post('/verify-email', authController.verifyEmail);
-authRouter.post('/resend-verification-email', authController.resendVerificationEmail);
+authRouter.post('/forgot-password', forgotPasswordValidation, validateRequest, guestMiddleware, authController.forgotPassword);
+authRouter.post('/reset-password', resetPasswordValidation, validateRequest, guestMiddleware, authController.resetPassword);
+authRouter.get('/verify-email', authController.verifyEmail);
+authRouter.post('/resend-verification-email', authenticatedMiddleware, authController.resendVerificationEmail);
 
 export default authRouter;
