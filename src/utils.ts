@@ -1,0 +1,79 @@
+import { Response } from 'express';
+import jwt from 'jsonwebtoken';
+import { UserPayload } from './models/User';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'my_secret_key';
+const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'my_refresh_token_secret';
+
+/**
+ * Sends a JSON response with a given status and data.
+ * 
+ * @param res - The Express Response object.
+ * @param message - The message to be included in the response.
+ * @param data - The data to be included in the response.
+ * @param status - The HTTP status code to be used for the response. Defaults to 200.
+ */
+export const sendResponse = <T>(res: Response, message: string, data: T, status = 200) => {
+  return res.status(status).json({
+    message,
+    data
+  })
+}
+
+/**
+ * Generates a JWT token.
+ * 
+ * @param payload - The content of the token's payload. Can be any object you want to include in the token.
+ * @param expiresIn - Expiration time of the token in string format (e.g., "1h", "2d").
+ * @returns The generated JWT token.
+ * 
+ * @example
+ * const token = generateToken({ userId: 1 }, '1h');
+ */
+export function generateToken(payload: UserPayload, type: 'access' | 'refresh'  = 'access', expiresIn = '1h'): string {
+  const secret = type === 'access' ? JWT_SECRET : REFRESH_TOKEN_SECRET;
+  if (type === 'refresh') expiresIn = '30d';
+  return jwt.sign(payload, secret, { expiresIn });
+}
+
+/**
+ * Retrieves the payload from a JWT token.
+ * 
+ * @param token - The JWT token from which to retrieve the payload.
+ * @returns The decoded payload of the token if valid, otherwise `null`.
+ * 
+ * @example
+ * const payload = decodeToken('your_jwt_token');
+ */
+export function decodeToken(token: string): UserPayload | null {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    return decoded as UserPayload;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Validates a JWT token and checks if it is expired.
+ * 
+ * @param token - The JWT token to be validated.
+ * @returns An object containing the validation status and, if valid, the decoded payload.
+ * 
+ * @example
+ * const result = verifyToken('your_jwt_token');
+ * if (result.valid) {
+ *   console.log('Token is valid:', result.payload);
+ * } else {
+ *   console.log('Token is invalid or expired:', result.error);
+ * }
+ */
+export function verifyToken(token: string): boolean {
+  try {
+    // Verify the token using the secret
+    jwt.verify(token, JWT_SECRET);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

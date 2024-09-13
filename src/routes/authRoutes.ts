@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import * as authController from '../controllers/authController';
-import { validateRequest } from '../middlewares';
+import { authenticatedMiddleware, guestMiddleware, validateRequest } from '../middlewares';
 import {
   authenticateValidation,
   registerValidation,
@@ -20,10 +20,10 @@ const authRouter = Router();
  *       200:
  *         description: Ejemplo obtenido exitosamente
  */
-authRouter.post('/login', authenticateValidation, validateRequest, authController.login);
-authRouter.post('/logout', authController.logout);
-authRouter.post('/refresh-token', authController.refreshToken);
-authRouter.post('/register', registerValidation, validateRequest, authController.register);
+authRouter.post('/login', authenticateValidation, validateRequest, guestMiddleware, authController.login);
+authRouter.post('/logout', authenticatedMiddleware, authController.logout);
+authRouter.post('/refresh-token', authenticatedMiddleware, authController.refreshToken);
+authRouter.post('/register', registerValidation, validateRequest, guestMiddleware, authController.register);
 authRouter.post('/forgot-password', forgotPasswordValidation, validateRequest, authController.forgotPassword);
 authRouter.post('/reset-password', resetPasswordValidation, validateRequest, authController.resetPassword);
 authRouter.post('/verify-email', authController.verifyEmail);

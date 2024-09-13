@@ -1,5 +1,7 @@
 import { body } from 'express-validator';
 
+import { UserRole } from '../types/enums';
+
 export const authenticateValidation = [
   body('email')
     .notEmpty()

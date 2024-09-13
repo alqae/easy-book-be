@@ -1,11 +1,11 @@
-enum UserRole {
+export enum UserRole {
   CUSTOMER,
   BUSINESS,
   EMPLOYEE,
   ADMIN
 }
 
-enum UserStatus {
+export enum UserStatus {
   ACTIVE,
   INACTIVE,
   BANNED,
