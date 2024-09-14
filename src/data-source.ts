@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
-import { User, Token } from './models';
+import { User, Token, Attachment } from './models';
 
 export const AppDataSource = new DataSource({
     type: "mongodb",
@@ -12,7 +12,7 @@ export const AppDataSource = new DataSource({
     password: process.env.DB_PASSWORD,
     synchronize: true,
     logging: false,
-    entities: [User, Token],
+    entities: [User, Token, Attachment],
     migrations: [],
     subscribers: [],
 })
