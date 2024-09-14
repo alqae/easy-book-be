@@ -5,7 +5,7 @@ import { UserRole, UserStatus } from '../types/enums';
 @Entity('users')
 export class User {
     @ObjectIdColumn()
-    id: ObjectId;
+    _id: ObjectId;
   
     @Column({ nullable: true })
     firstName?: string;

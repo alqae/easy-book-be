@@ -20,7 +20,7 @@ export const authenticatedMiddleware = async (
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { email: payload.email } });
     delete user.password;
-    (req as RequestWithUser).user = { ...user, id: user.id.toString() };
+    (req as RequestWithUser).user = { ...user, _id: user._id.toString() };
     next();
   } else {
     sendResponse(res, 'Invalid token', null, 401);

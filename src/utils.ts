@@ -32,7 +32,7 @@ export const sendResponse = <T>(res: Response, message: string, data: T, status 
  * @returns The generated JWT token.
  * 
  * @example
- * const token = generateToken({ userId: 1 }, '1h');
+ * const token = generateToken({ id: 1, email: 'bob@bob.com' }, '1h');
  */
 export function generateToken(
   payload: UserPayload,

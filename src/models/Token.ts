@@ -5,7 +5,7 @@ import { TokenStatus, TokenType } from '../types/enums';
 @Entity('tokens')
 export class Token {
   @ObjectIdColumn()
-  id: ObjectId; // Use ObjectID instead of integer for MongoDB
+  _id: ObjectId;
 
   @Column()
   value: string;

@@ -26,7 +26,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const token = generateToken({ id: user.id.toString(), email: user.email });
+  const token = generateToken({ id: user._id.toString(), email: user.email });
   sendResponse(res, 'Welcome back!', { token }, 200);
 };
 
@@ -50,7 +50,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
   const user = await userRepository.save(newUser);
 
   // Generate and save verification token
-  const tokenValue = generateToken({ id: user.id.toString(), email: user.email }, 'verify');
+  const tokenValue = generateToken({ id: user._id.toString(), email: user.email }, 'verify');
   const newToken = new Token();
   newToken.value = tokenValue;
   newToken.type = TokenType.VERIFY_EMAIL;
@@ -134,7 +134,7 @@ export const resendVerificationEmail = async (req: RequestWithUser, res: Respons
   const baseUrl = `${protocol}://${host}`;
 
   // Generate and save verification token
-  const tokenValue = generateToken({ id: req.user.id, email: req.user.email }, 'verify');
+  const tokenValue = generateToken({ id: req.user._id, email: req.user.email }, 'verify');
   const newToken = new Token();
   newToken.value = tokenValue;
   newToken.type = TokenType.VERIFY_EMAIL;
@@ -164,7 +164,7 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
   }
 
   const newToken = new Token();
-  const tokenValue = generateToken({ id: user.id.toString(), email: user.email }, 'reset');;
+  const tokenValue = generateToken({ id: user._id.toString(), email: user.email }, 'reset');;
   newToken.value = tokenValue;
   newToken.type = TokenType.FORGOT_PASSWORD;
   newToken.status = TokenStatus.ACTIVE;
