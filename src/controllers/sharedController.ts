@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
-import multer from 'multer';
+import path from 'path';
 import fs from 'fs';
 
 import { AppDataSource } from '../data-source';
 import { sendResponse } from '../utils';
 import { Attachment } from '../models';
-import { ObjectId } from 'mongodb';
-import path from 'path';
 
 const attachmentRepository = AppDataSource.getRepository(Attachment);
 
@@ -23,12 +21,11 @@ export const getCitiesByCountry = (req: Request, res: Response): void => {
   sendResponse(res, 'Cities fetched successfully', cities, 200);
 };
 
-export const uploadFile = async (req: Request, res: Response): Promise<void> => {
+export const uploadFile = async (req: Request, res: Response): Promise<Response> => {
   const file = req.file;
 
   if (!file) {
-    res.status(400).send('No file uploaded.');
-    return;
+    return sendResponse(res, 'File not found', null, 404);
   }
 
   const attachment = new Attachment();
@@ -37,19 +34,29 @@ export const uploadFile = async (req: Request, res: Response): Promise<void> => 
   attachment.path = file.path;
 
   await attachmentRepository.save(attachment);
-  sendResponse(res, 'File uploaded successfully!', null, 200);
+  return sendResponse(res, 'File uploaded successfully!', null, 200);
 };
 
-export const downloadFile = async (req: Request, res: Response): Promise<void> => {
-  const attachmentId = new ObjectId(req.params.id);
-  const attachment = await attachmentRepository.findOne({ where: { _id: attachmentId } });
+export const downloadFile = async (req: Request, res: Response): Promise<Response | void> => {
+  const attachmentId = parseInt(req.params.id);
+  const attachment = await attachmentRepository.findOne({ where: { id: attachmentId } });
+
+  if (!attachment) {
+    return sendResponse(res, 'Attachment not found', null, 404);
+  }
+
   const filePath = path.join(__dirname, '../..', attachment.path);
-  res.download(filePath, attachment.originalName);
+  return res.download(filePath, attachment.originalName);
 };
 
-export const getFile = async (req: Request, res: Response): Promise<void> => {
-  const attachmentId = new ObjectId(req.params.id);
-  const attachment = await attachmentRepository.findOne({ where: { _id: attachmentId } });
+export const getFile = async (req: Request, res: Response): Promise<Response | void> => {
+  const attachmentId = parseInt(req.params.id);
+  const attachment = await attachmentRepository.findOne({ where: { id: attachmentId } });
+
+  if (!attachment) {
+    return sendResponse(res, 'Attachment not found', null, 404);
+  }
+
   const filePath = path.join(__dirname, '../..', attachment.path);
-  res.sendFile(filePath);
+  return res.sendFile(filePath);
 };

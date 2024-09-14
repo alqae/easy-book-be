@@ -20,7 +20,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || 'my_refresh_tok
  * @param data - The data to be included in the response.
  * @param status - The HTTP status code to be used for the response. Defaults to 200.
  */
-export const sendResponse = <T>(res: Response, message: string, data: T, status = 200) => {
+export const sendResponse = <T>(res: Response, message: string, data: T, status = 200): Response<T> => {
   return res.status(status).json({ message, data })
 }
 

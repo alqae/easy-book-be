@@ -12,29 +12,30 @@ export const whoAmI = (req: RequestWithUser, res: Response): void => {
   sendResponse(res, ':)', req.user);
 };
 
-export const updateProfile = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const updateProfile = async (req: RequestWithUser, res: Response): Promise<Response> => {
   await userRepository.update({ email: req.user.email }, req.body);
-  sendResponse(res, 'Profile updated successfully', null, 200);
+  return sendResponse(res, 'Profile updated successfully', null, 200);
 };
 
-export const updatePassword = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const updatePassword = async (req: RequestWithUser, res: Response): Promise<Response> => {
   const { oldPassword, newPassword } = req.body;
 
   const { password: savedPassword } = await userRepository.findOne({ where: { email: req.user.email } });
   const isValidOldPassword = await bcrypt.compare(oldPassword, savedPassword);
+
   if (!isValidOldPassword) {
-    sendResponse(res, 'Bad credentials', null, 400);
-    return;
+    return sendResponse(res, 'Bad credentials', null, 400);
   }
 
   const hashedPassword = await bcrypt.hash(newPassword, 10);
   await userRepository.update({ email: req.user.email }, { password: hashedPassword });
-  sendResponse(res, 'Password updated successfully', null, 200);
+
+  return sendResponse(res, 'Password updated successfully', null, 200);
 };
 
-export const updateRole = async (req: RequestWithUser, res: Response): Promise<void> => {
+export const updateRole = async (req: RequestWithUser, res: Response): Promise<Response> => {
   await userRepository.update({ email: req.user.email }, { role: req.body.role });
-  sendResponse(res, 'Role updated successfully', null, 200);
+  return sendResponse(res, 'Role updated successfully', null, 200);
 };
 
 // export const inviteUser = (req: Request, res: Response): void => {
