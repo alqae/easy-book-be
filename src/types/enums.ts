@@ -1,30 +1,35 @@
 export enum UserRole {
-  CUSTOMER,
-  BUSINESS,
-  EMPLOYEE,
-  ADMIN
+  CUSTOMER = 'customer',
+  BUSINESS = 'business',
+  EMPLOYEE = 'employee',
+  ADMIN = 'admin'
 }
 
 export enum UserStatus {
-  ACTIVE,
-  INACTIVE,
-  BANNED,
-  DELETED,
-  UNVERIFIED
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  BANNED = 'banned',
+  DELETED = 'deleted',
+  UNVERIFIED = 'unverified'
 }
 
 export enum TokenStatus {
-  ACTIVE = 'ACTIVE',
-  EXPIRED = 'EXPIRED',
+  ACTIVE = 'active',
+  EXPIRED = 'expired',
 }
 
 export enum TokenType {
-  INVITATION = 'INVITATION',
-  FORGOT_PASSWORD = 'FORGOT_PASSWORD',
-  VERIFY_EMAIL = 'VERIFY_EMAIL',
+  INVITATION = 'invitation',
+  FORGOT_PASSWORD = 'forgot_password',
+  VERIFY_EMAIL = 'verify_email',
 }
 
 export enum EmailTemplate {
   FORGOT_PASSWORD = 'forgot-password',
   VERIFICATION = 'verify-email',
+}
+
+export enum AttachmentGroup {
+  AVATARS = 'avatars',
+  COMMENTS = 'comments'
 }

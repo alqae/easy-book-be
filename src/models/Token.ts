@@ -1,11 +1,11 @@
-import { Entity, ObjectIdColumn, ObjectId, Column } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 import { TokenStatus, TokenType } from '../types/enums';
 
 @Entity('tokens')
 export class Token {
-  @ObjectIdColumn()
-  _id: ObjectId;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   value: string;
