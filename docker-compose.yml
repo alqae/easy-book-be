@@ -1,15 +1,40 @@
 services:
+  app:
+    container_name: easy_book_be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: >
+      /bin/sh -c "./wait-for-it.sh db:${DB_PORT} -- yarn migrate:run && yarn start"
+    depends_on:
+      - db
+    networks:
+      - easy_book_network
+
   db:
     image: postgres:15-alpine 
     container_name: easy_book_db
     environment:
-      POSTGRES_USER: ${DB_USER}  # Referencia a las variables de entorno
+      POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data  # Persistencia de datos
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - easy_book_network
 
 volumes:
   db_data:
+
+networks:
+  easy_book_network:
+    driver: bridge
