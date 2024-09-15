@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 
 import { TokenStatus, TokenType } from '../types/enums';
 
@@ -15,4 +15,20 @@ export class Token {
 
   @Column({ type: 'enum', enum: TokenType })
   type: TokenType;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @BeforeInsert()
+  updateCreatedAt() {
+    this.createdAt = new Date();
+  }
+
+  @BeforeUpdate()
+  updateUpdatedAt() {
+    this.updatedAt = new Date();
+  }
 }

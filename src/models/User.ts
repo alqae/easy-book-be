@@ -2,6 +2,7 @@ import { Entity, Column, Index, OneToMany, PrimaryGeneratedColumn, BeforeInsert,
 
 import { UserRole, UserStatus } from '../types/enums';
 import { Service } from './Service';
+import { Reservation } from './Reservation';
 
 @Entity('users')
 export class User {
@@ -46,14 +47,15 @@ export class User {
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.INACTIVE })
   status: UserStatus;
 
-  // @ManyToOne(() => User, user => user.businessUsers, { nullable: true })
-  // business?: User;
-
-  // @OneToMany(() => User, user => user.business, { cascade: true, eager: true })
-  // businessUsers: User[];
-
   @OneToMany(() => Service, (service) => service.user, { lazy: true })
   services: Service[];
+
+  // FYI: The User is business for customer so we need both reservations
+  @OneToMany(() => Reservation, (reservation) => reservation.business, { lazy: true })
+  businessReservations: Reservation[];
+
+  @OneToMany(() => Reservation, (reservation) => reservation.customer, { lazy: true })
+  customerReservations: Reservation[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
