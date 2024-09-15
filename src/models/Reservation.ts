@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  BeforeInsert,
+  BeforeUpdate
+} from 'typeorm';
 
 import { ReservationStatus } from '../types/enums';
 import { User } from './User';

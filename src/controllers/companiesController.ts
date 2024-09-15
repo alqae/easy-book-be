@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
-import { FilterOperators } from 'typeorm';
 
+import { cleanKeys, sendResponse } from '../utils';
 import { AppDataSource } from '../data-source';
 import { UserRole } from '../types/enums';
-import { sendResponse } from '../utils';
 import { User } from '../models';
 
 const userRepository = AppDataSource.getRepository(User);
@@ -29,7 +28,8 @@ export const getCompanies = async (req: Request, res: Response): Promise<Respons
   // TODO: implement pagination
   // TODO: implement caching
 
-  const companies = await query.getMany();
+  let companies = await query.getMany();
+  companies = cleanKeys(companies);
 
   return sendResponse(res, 'Companies fetched successfully', companies, 200);
 }
