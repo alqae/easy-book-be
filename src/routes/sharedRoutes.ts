@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 import * as sharedController from '../controllers/sharedController';
+import { authenticatedMiddleware } from '../middlewares';
 
 const sharedRouter = Router();
 
@@ -11,8 +12,8 @@ sharedRouter.get('/countries', sharedController.getCountries);
 sharedRouter.get('/cities/:country', sharedController.getCitiesByCountry);
 
 const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    const customPath = 'uploads/custom'; // Puedes personalizar esta ruta
+  destination: (req, _file, cb) => {
+    const customPath = `uploads/${req.params.group}`; // Puedes personalizar esta ruta
     fs.mkdirSync(customPath, { recursive: true }); // Crear la carpeta si no existe
     cb(null, customPath);
   },
@@ -22,7 +23,7 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-sharedRouter.post('/upload-file', upload.single('file'), sharedController.uploadFile);
+sharedRouter.post('/upload-file/:group', authenticatedMiddleware, upload.single('file'), sharedController.uploadFile);
 sharedRouter.get('/download-file/:id', sharedController.downloadFile);
 sharedRouter.get('/get-file/:id', sharedController.getFile);
 

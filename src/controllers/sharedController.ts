@@ -2,10 +2,12 @@ import { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 
+import { AttachmentGroup } from '../types/enums';
 import { AppDataSource } from '../data-source';
 import { sendResponse } from '../utils';
-import { Attachment } from '../models';
+import { Attachment, User } from '../models';
 
+const userRepository = AppDataSource.getRepository(User);
 const attachmentRepository = AppDataSource.getRepository(Attachment);
 
 export const getCountries = (req: Request, res: Response): void => {
@@ -28,13 +30,33 @@ export const uploadFile = async (req: Request, res: Response): Promise<Response>
     return sendResponse(res, 'File not found', null, 404);
   }
 
+  const group = req.params.group as AttachmentGroup;
+
+  if (!Object.values(AttachmentGroup).includes(group)) {
+    return sendResponse(res, 'Invalid group', null, 400);
+  }
+
   const attachment = new Attachment();
   attachment.filename = file.filename;
   attachment.originalName = file.originalname;
   attachment.path = file.path;
+  attachment.group = group;
+  attachment.size = file.size;
 
-  await attachmentRepository.save(attachment);
-  return sendResponse(res, 'File uploaded successfully!', null, 200);
+  const savedAttachment = await attachmentRepository.save(attachment);
+
+  switch (group) {
+    case AttachmentGroup.AVATARS:
+      const user = await userRepository.findOne({ where: { id: req.user.id } });
+      user.avatar = savedAttachment;
+      await userRepository.save(user);
+      break;
+  
+    default:
+      break;
+  }
+
+  return sendResponse(res, 'File uploaded successfully!', savedAttachment, 200);
 };
 
 export const downloadFile = async (req: Request, res: Response): Promise<Response | void> => {

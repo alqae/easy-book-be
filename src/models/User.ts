@@ -1,13 +1,28 @@
-import { Entity, Column, Index, OneToMany, PrimaryGeneratedColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
+import {
+  Entity,
+  Column,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate,
+  OneToOne,
+  JoinColumn
+} from 'typeorm';
 
 import { UserRole, UserStatus } from '../types/enums';
-import { Service } from './Service';
 import { Reservation } from './Reservation';
+import { Attachment } from './Attachment';
+import { Service } from './Service';
 
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @OneToOne(() => Attachment, { lazy: true })
+  @JoinColumn({ name: 'avatar_id' })
+  avatar?: Attachment;
 
   @Index({ fulltext: true })
   @Column({ nullable: true })
