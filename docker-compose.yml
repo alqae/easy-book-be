@@ -1,6 +1,7 @@
 services:
   app:
     container_name: easy_book_be
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,6 +21,7 @@ services:
   db:
     image: postgres:15-alpine 
     container_name: easy_book_db
+    restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -28,7 +30,6 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-    restart: always
     networks:
       - easy_book_network
 

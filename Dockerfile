@@ -1,8 +1,5 @@
 # Use the official Node.js image with Alpine
-FROM node:16-alpine
-
-# Install bash
-RUN apk add --no-cache bash
+FROM node:16
 
 # Set the working directory
 WORKDIR /app
