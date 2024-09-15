@@ -55,12 +55,9 @@ export const register = async (req: Request, res: Response): Promise<Response> =
   newToken.status = TokenStatus.ACTIVE;
   await tokenRepository.save(newToken);
 
-  const protocol = req.protocol;
-  const host = req.get('host');
-  const baseUrl = `${protocol}://${host}`;
   await sendEmail(email, 'Verify your email', EmailTemplate.VERIFICATION, {
     fullName: `${user.firstName} ${user.lastName}`,
-    link: `${baseUrl}/auth/verify-email?token=${tokenValue}`,
+    link: `${process.env.APP_URL}/auth/verify-email?token=${tokenValue}`,
   });
 
   return sendResponse(res, 'User created successfully', null, 201);
@@ -123,10 +120,6 @@ export const verifyEmail = async (req: Request, res: Response): Promise<Response
 };
 
 export const resendVerificationEmail = async (req: RequestWithUser, res: Response): Promise<Response> => {
-  const protocol = req.protocol;
-  const host = req.get('host');
-  const baseUrl = `${protocol}://${host}`;
-
   // Generate and save verification token
   const tokenValue = generateToken({ id: req.user.id, email: req.user.email }, 'verify');
   const newToken = new Token();
@@ -137,7 +130,7 @@ export const resendVerificationEmail = async (req: RequestWithUser, res: Respons
 
   await sendEmail(req.user.email, 'Verify your email', EmailTemplate.VERIFICATION, {
     fullName: `${req.user.firstName} ${req.user.lastName}`,
-    link: `${baseUrl}/auth/verify-email?token=${tokenValue}`,
+    link: `${process.env.APP_URL}/auth/verify-email?token=${tokenValue}`,
   });
 
   return sendResponse(res, 'Email sent successfully', null, 200);
@@ -163,13 +156,9 @@ export const forgotPassword = async (req: Request, res: Response): Promise<Respo
   newToken.status = TokenStatus.ACTIVE;
   await tokenRepository.save(newToken);
 
-  const protocol = req.protocol;
-  const host = req.get('host');
-  const baseUrl = `${protocol}://${host}`;
-
   await sendEmail(email, 'Reset your password', EmailTemplate.FORGOT_PASSWORD, {
     fullName: `${user.firstName} ${user.lastName}`,
-    link: `${baseUrl}/auth/reset-password?token=${tokenValue}`,
+    link: `${process.env.WEB_URL}/forgot-password?token=${tokenValue}`,
   });
 
   return sendResponse(res, 'Email sent successfully', null, 200);

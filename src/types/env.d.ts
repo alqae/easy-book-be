@@ -17,6 +17,9 @@ declare namespace NodeJS {
     SMTP_USER: string;
     SMTP_PASSWORD: string;
     SMTP_FROM: string;
+    // URLs
+    APP_URL: string;
+    WEB_URL: string;
     // Environment
     NODE_ENV?: 'development' | 'production';
   }
