@@ -39,13 +39,13 @@ export const getCompany = async (req: Request, res: Response): Promise<Response<
     where: {
       id: parseInt(req.params.id),
       role: UserRole.BUSINESS
-    }
+    },
+    relations: ['services']
   });
 
   if (!company) {
     return sendResponse(res, 'Company not found', null, 404);
   }
 
-  delete company.password;
-  return sendResponse(res, 'Company fetched successfully', company, 200);
+  return sendResponse(res, 'Company fetched successfully', cleanKeys(company), 200);
 }

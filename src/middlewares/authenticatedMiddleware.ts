@@ -10,7 +10,7 @@ export const authenticatedMiddleware = async (
   const token = req.headers.authorization?.split(' ')[1]; // Assumes token is in the 'Authorization' header
   
   if (!token) {
-    return sendResponse(res, 'No token provided', null, 401);
+    return sendResponse(res, 'Unauthorized', null, 401);
   }
 
   const result = verifyToken(token);
@@ -23,6 +23,6 @@ export const authenticatedMiddleware = async (
     (req as RequestWithUser).user = user;
     next();
   } else {
-    sendResponse(res, 'Invalid token', null, 401);
+    sendResponse(res, 'Unauthorized', null, 401);
   }
 }

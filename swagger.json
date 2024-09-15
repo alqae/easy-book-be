@@ -1,0 +1,2910 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Documentation",
+    "version": "1.0.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Authentication is required or has failed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message",
+                  "example": "Unauthorized"
+                },
+                "data": {
+                  "type": "object",
+                  "description": "Additional details about the error",
+                  "example": null
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Authenticates the user and returns a token",
+        "requestBody": {
+          "description": "Request body for user authentication",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The user's email address",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The user's password",
+                    "example": "securePassword123"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful, token received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message",
+                      "example": "Authentication successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string",
+                          "description": "The authentication token received",
+                          "example": "secretToken123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Validation errors"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Validation errors details",
+                      "example": [
+                        "Please enter a valid email address",
+                        "Please enter a password"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, bad credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating bad credentials",
+                      "example": "Bad credentials"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": {}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Logs out the user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logout successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the user has been logged out",
+                      "example": "Logged out successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the logout action",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Registers a new user",
+        "requestBody": {
+          "description": "Request body for user registration",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "description": "The user's first name",
+                    "example": "John"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "The user's last name",
+                    "example": "Doe"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "The city where the user resides",
+                    "example": "New York"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "The country where the user resides",
+                    "example": "USA"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "The user's phone number",
+                    "example": "+1234567890"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The user's email address",
+                    "example": "user@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The user's password",
+                    "example": "securePassword123"
+                  },
+                  "token": {
+                    "type": "string",
+                    "description": "Optional token for verification or other purposes",
+                    "example": "verificationToken123"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional description of the user",
+                    "example": "A brief description about the user"
+                  },
+                  "address": {
+                    "type": "string",
+                    "description": "Optional address of the user",
+                    "example": "123 Main St, Apt 4B"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "The role assigned to the user",
+                    "example": "admin"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "city",
+                  "country",
+                  "phoneNumber",
+                  "email",
+                  "password",
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the user has been created",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the registration action",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, validation errors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message",
+                      "example": "Validation errors"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Validation errors details",
+                      "example": [
+                        "First name is required",
+                        "Email is required"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refreshes the authentication token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the token has been refreshed",
+                      "example": "Token refreshed"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "description": "The new access token",
+                          "example": "newAccessToken123"
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "description": "The new refresh token",
+                          "example": "newRefreshToken123"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Sends a password reset email to the user",
+        "requestBody": {
+          "description": "Request body for sending a password reset email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "The user's email address",
+                    "example": "user@example.com"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the email has been sent",
+                      "example": "Email sent successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the request",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating the user was not found",
+                      "example": "User not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Resets the user's password",
+        "requestBody": {
+          "description": "Request body for resetting the password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "The reset token",
+                    "example": "resetToken123"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The new password",
+                    "example": "newPassword123"
+                  },
+                  "confirmPassword": {
+                    "type": "string",
+                    "description": "Confirmation of the new password",
+                    "example": "newPassword123"
+                  }
+                },
+                "required": [
+                  "token",
+                  "password",
+                  "confirmPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the password has been reset",
+                      "example": "Password reset successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the request",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating an invalid token",
+                      "example": "Invalid token"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/verify-email": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Verifies the user's email address",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The verification token",
+              "example": "verificationToken123"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the email has been verified",
+                      "example": "Email verified successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the verification",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No token provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating no token was provided",
+                      "example": "No token provided"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error verifying email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating verification issues",
+                      "oneOf": [
+                        {
+                          "example": "Invalid token"
+                        },
+                        {
+                          "example": "Token expired"
+                        },
+                        {
+                          "example": "User already verified"
+                        }
+                      ]
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/resend-verification-email": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Resends the verification email to the user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the email has been sent",
+                      "example": "Email sent successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the request",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/companies": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Searches for companies based on query parameters",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "Text to search for",
+              "example": "Tech"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "City to filter by",
+              "example": "San Francisco"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "description": "Country to filter by",
+              "example": "USA"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Companies fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating companies have been fetched",
+                      "example": "Companies fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID of the company",
+                            "example": 101
+                          },
+                          "firstName": {
+                            "type": "string",
+                            "description": "First name of the company representative",
+                            "example": "Alice"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "description": "Last name of the company representative",
+                            "example": "Johnson"
+                          },
+                          "city": {
+                            "type": "string",
+                            "description": "City where the company is located",
+                            "example": "San Francisco"
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "Country where the company is located",
+                            "example": "USA"
+                          },
+                          "phoneNumber": {
+                            "type": "string",
+                            "description": "Phone number of the company",
+                            "example": "415-555-1234"
+                          },
+                          "email": {
+                            "type": "string",
+                            "description": "Email address of the company",
+                            "example": "alice.johnson@example.com"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Description of the company",
+                            "example": "Leading tech company specializing in software development."
+                          },
+                          "address": {
+                            "type": "string",
+                            "description": "Address of the company",
+                            "example": "123 Tech Street, San Francisco, CA"
+                          },
+                          "verify_email_at": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Date when the email was verified",
+                            "example": "2024-09-15T10:00:00Z"
+                          },
+                          "role": {
+                            "type": "string",
+                            "description": "Role of the user, should be 'business' for companies",
+                            "example": "business"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status of the company",
+                            "example": "active"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Creation date of the company record",
+                            "example": "2024-09-01T08:00:00Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Last update date of the company record",
+                            "example": "2024-09-10T09:00:00Z"
+                          },
+                          "avatar_id": {
+                            "type": "integer",
+                            "description": "ID of the company's avatar",
+                            "example": 5
+                          },
+                          "services": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "description": "ID of the service",
+                                  "example": 201
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "description": "Name of the service",
+                                  "example": "Consulting"
+                                },
+                                "description": {
+                                  "type": "string",
+                                  "description": "Description of the service",
+                                  "example": "Expert consulting in technology and business strategies."
+                                },
+                                "duration": {
+                                  "type": "string",
+                                  "description": "Duration of the service",
+                                  "example": "2h"
+                                },
+                                "price": {
+                                  "type": "integer",
+                                  "description": "Price of the service",
+                                  "example": 500
+                                },
+                                "userId": {
+                                  "type": "integer",
+                                  "description": "ID of the user associated with the service",
+                                  "example": 101
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/companies/{id}": {
+      "get": {
+        "tags": [
+          "Companies"
+        ],
+        "summary": "Fetches details of a specific company by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "ID of the company to fetch",
+              "example": 101
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the company has been fetched",
+                      "example": "Company fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the company",
+                          "example": 101
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "First name of the company representative",
+                          "example": "Alice"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "Last name of the company representative",
+                          "example": "Johnson"
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "City where the company is located",
+                          "example": "San Francisco"
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "Country where the company is located",
+                          "example": "USA"
+                        },
+                        "phoneNumber": {
+                          "type": "string",
+                          "description": "Phone number of the company",
+                          "example": "415-555-1234"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "Email address of the company",
+                          "example": "alice.johnson@example.com"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the company",
+                          "example": "Leading tech company specializing in software development."
+                        },
+                        "address": {
+                          "type": "string",
+                          "description": "Address of the company",
+                          "example": "123 Tech Street, San Francisco, CA"
+                        },
+                        "verify_email_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Date when the email was verified",
+                          "example": "2024-09-15T10:00:00Z"
+                        },
+                        "role": {
+                          "type": "string",
+                          "description": "Role of the user, should be 'business' for companies",
+                          "example": "business"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Status of the company",
+                          "example": "active"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation date of the company record",
+                          "example": "2024-09-01T08:00:00Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Last update date of the company record",
+                          "example": "2024-09-10T09:00:00Z"
+                        },
+                        "avatar_id": {
+                          "type": "integer",
+                          "description": "ID of the company's avatar",
+                          "example": 5
+                        },
+                        "services": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the service",
+                                "example": 201
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the service",
+                                "example": "Consulting"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Description of the service",
+                                "example": "Expert consulting in technology and business strategies."
+                              },
+                              "duration": {
+                                "type": "string",
+                                "description": "Duration of the service",
+                                "example": "2h"
+                              },
+                              "price": {
+                                "type": "integer",
+                                "description": "Price of the service",
+                                "example": 500
+                              },
+                              "userId": {
+                                "type": "integer",
+                                "description": "ID of the user associated with the service",
+                                "example": 101
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Company not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating the company was not found",
+                      "example": "Company not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Fetches the profile of the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the profile has been fetched",
+                      "example": "Profile fetched successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the user",
+                          "example": 123
+                        },
+                        "firstName": {
+                          "type": "string",
+                          "description": "First name of the user",
+                          "example": "Alice"
+                        },
+                        "lastName": {
+                          "type": "string",
+                          "description": "Last name of the user",
+                          "example": "Smith"
+                        },
+                        "city": {
+                          "type": "string",
+                          "description": "City where the user is located",
+                          "example": "Wonderland"
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "Country where the user is located",
+                          "example": "Fictionland"
+                        },
+                        "phoneNumber": {
+                          "type": "string",
+                          "description": "Phone number of the user",
+                          "example": "9876543210"
+                        },
+                        "email": {
+                          "type": "string",
+                          "description": "Email address of the user",
+                          "example": "alice.smith@example.com"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the user",
+                          "example": "An enthusiastic explorer of fictional realms."
+                        },
+                        "address": {
+                          "type": "string",
+                          "description": "Address of the user",
+                          "example": "123 Fantasy Ave, Wonderland"
+                        },
+                        "verify_email_at": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Date when the email was verified",
+                          "example": "2024-09-15T04:00:55.174Z"
+                        },
+                        "role": {
+                          "type": "string",
+                          "description": "Role of the user",
+                          "example": "explorer"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Status of the user",
+                          "example": "active"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation date of the user profile",
+                          "example": "2024-09-01T08:00:00Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Last update date of the user profile",
+                          "example": "2024-09-10T09:00:00Z"
+                        },
+                        "avatar_id": {
+                          "type": "integer",
+                          "description": "ID of the user's avatar",
+                          "example": 9
+                        },
+                        "services": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the service",
+                                "example": 301
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the service",
+                                "example": "Adventure Tour"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Description of the service",
+                                "example": "Guided tours through mystical landscapes."
+                              },
+                              "duration": {
+                                "type": "string",
+                                "description": "Duration of the service",
+                                "example": "4h"
+                              },
+                              "price": {
+                                "type": "integer",
+                                "description": "Price of the service",
+                                "example": 150
+                              }
+                            }
+                          }
+                        },
+                        "customerReservations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the reservation",
+                                "example": 501
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "Status of the reservation",
+                                "example": "Pending"
+                              },
+                              "startDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Start date of the reservation",
+                                "example": "2024-09-20T14:00:00Z"
+                              },
+                              "endDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "End date of the reservation",
+                                "example": "2024-09-20T15:00:00Z"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Creation date of the reservation",
+                                "example": "2024-09-15T12:00:00Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last update date of the reservation",
+                                "example": "2024-09-16T08:00:00Z"
+                              },
+                              "service": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "description": "ID of the service",
+                                    "example": 301
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "description": "Name of the service",
+                                    "example": "Adventure Tour"
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "description": "Description of the service",
+                                    "example": "Guided tours through mystical landscapes."
+                                  },
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Duration of the service",
+                                    "example": "4h"
+                                  },
+                                  "price": {
+                                    "type": "integer",
+                                    "description": "Price of the service",
+                                    "example": 150
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "businessReservations": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the reservation",
+                                "example": 702
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "Status of the reservation",
+                                "example": "Confirmed"
+                              },
+                              "startDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Start date of the reservation",
+                                "example": "2024-10-01T10:00:00Z"
+                              },
+                              "endDate": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "End date of the reservation",
+                                "example": "2024-10-01T11:00:00Z"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Creation date of the reservation",
+                                "example": "2024-09-20T09:00:00Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last update date of the reservation",
+                                "example": "2024-09-22T08:00:00Z"
+                              },
+                              "service": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "description": "ID of the service",
+                                    "example": 302
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "description": "Name of the service",
+                                    "example": "Repair Service"
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "description": "Description of the service",
+                                    "example": "Quick fixes for all your gadget issues."
+                                  },
+                                  "duration": {
+                                    "type": "string",
+                                    "description": "Duration of the service",
+                                    "example": "1h"
+                                  },
+                                  "price": {
+                                    "type": "integer",
+                                    "description": "Price of the service",
+                                    "example": 80
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Updates the profile of the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "description": "First name of the user",
+                    "example": "Alice"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "description": "Last name of the user",
+                    "example": "Smith"
+                  },
+                  "city": {
+                    "type": "string",
+                    "description": "City where the user is located",
+                    "example": "Wonderland"
+                  },
+                  "country": {
+                    "type": "string",
+                    "description": "Country where the user is located",
+                    "example": "Fictionland"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "Phone number of the user",
+                    "example": "9876543210"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Email address of the user",
+                    "example": "alice.smith@example.com"
+                  }
+                },
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "city",
+                  "country",
+                  "phoneNumber",
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the profile has been updated",
+                      "example": "Profile updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the update",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/profile/password": {
+      "patch": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Updates the password for the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "oldPassword": {
+                    "type": "string",
+                    "description": "Current password of the user",
+                    "example": "currentPassword123"
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "description": "New password for the user",
+                    "example": "newPassword456"
+                  }
+                },
+                "required": [
+                  "oldPassword",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the password has been updated",
+                      "example": "Password updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the update",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad credentials or invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating the issue with the request",
+                      "example": "Bad credentials"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the update",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile/role": {
+      "patch": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Updates the role of the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "New role for the user. Valid roles are: customer, business, employee, admin.",
+                    "example": "admin",
+                    "enum": [
+                      "customer",
+                      "business",
+                      "employee",
+                      "admin"
+                    ]
+                  }
+                },
+                "required": [
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Role updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the role has been updated",
+                      "example": "Role updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid role or input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating the issue with the role input",
+                      "example": "Role must be one of the following: customer, business, employee, admin"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reservations": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Fetches all reservations for the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reservations fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating reservations have been fetched",
+                      "example": "Reservations fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID of the reservation",
+                            "example": 1
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Status of the reservation",
+                            "example": "Pending"
+                          },
+                          "startDate": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Start date of the reservation",
+                            "example": "2024-09-14T22:47:27.756Z"
+                          },
+                          "endDate": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "End date of the reservation",
+                            "example": "2024-09-14T22:47:27.756Z"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Creation date of the reservation",
+                            "example": "2024-09-15T05:13:47.708Z"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Last update date of the reservation",
+                            "example": "2024-09-15T10:13:47.708Z"
+                          },
+                          "service": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the service",
+                                "example": 1
+                              },
+                              "name": {
+                                "type": "string",
+                                "description": "Name of the service",
+                                "example": "Consulting"
+                              },
+                              "description": {
+                                "type": "string",
+                                "description": "Description of the service",
+                                "example": "Expert consulting in technology and business strategies."
+                              },
+                              "duration": {
+                                "type": "string",
+                                "description": "Duration of the service",
+                                "example": "2h"
+                              },
+                              "price": {
+                                "type": "integer",
+                                "description": "Price of the service",
+                                "example": 500
+                              }
+                            }
+                          },
+                          "business": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the business",
+                                "example": 10
+                              },
+                              "firstName": {
+                                "type": "string",
+                                "description": "First name of the business owner",
+                                "example": "Alice"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "description": "Last name of the business owner",
+                                "example": "Smith"
+                              },
+                              "city": {
+                                "type": "string",
+                                "description": "City where the business is located",
+                                "example": "New York"
+                              },
+                              "country": {
+                                "type": "string",
+                                "description": "Country where the business is located",
+                                "example": "USA"
+                              },
+                              "phoneNumber": {
+                                "type": "string",
+                                "description": "Phone number of the business",
+                                "example": "1234567890"
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "Email address of the business",
+                                "example": "alice@business.com"
+                              },
+                              "role": {
+                                "type": "string",
+                                "description": "Role of the user",
+                                "example": "business"
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "Status of the user",
+                                "example": "active"
+                              }
+                            }
+                          },
+                          "customer": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "description": "ID of the customer",
+                                "example": 20
+                              },
+                              "firstName": {
+                                "type": "string",
+                                "description": "First name of the customer",
+                                "example": "Bob"
+                              },
+                              "lastName": {
+                                "type": "string",
+                                "description": "Last name of the customer",
+                                "example": "Johnson"
+                              },
+                              "city": {
+                                "type": "string",
+                                "description": "City where the customer is located",
+                                "example": "Los Angeles"
+                              },
+                              "country": {
+                                "type": "string",
+                                "description": "Country where the customer is located",
+                                "example": "USA"
+                              },
+                              "phoneNumber": {
+                                "type": "string",
+                                "description": "Phone number of the customer",
+                                "example": "9876543210"
+                              },
+                              "email": {
+                                "type": "string",
+                                "description": "Email address of the customer",
+                                "example": "bob@customer.com"
+                              },
+                              "role": {
+                                "type": "string",
+                                "description": "Role of the user",
+                                "example": "customer"
+                              },
+                              "status": {
+                                "type": "string",
+                                "description": "Status of the user",
+                                "example": "active"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Creates a new reservation for the currently authenticated user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Start date of the reservation",
+                    "example": "2024-09-15T10:00:00Z"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "End date of the reservation",
+                    "example": "2024-09-15T11:00:00Z"
+                  },
+                  "serviceId": {
+                    "type": "integer",
+                    "description": "ID of the service being reserved",
+                    "example": 1
+                  }
+                },
+                "required": [
+                  "startDate",
+                  "endDate",
+                  "serviceId"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Reservation created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the reservation has been created",
+                      "example": "Reservation created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the reservation",
+                          "example": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Status of the reservation",
+                          "example": "Pending"
+                        },
+                        "startDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Start date of the reservation",
+                          "example": "2024-09-15T10:00:00Z"
+                        },
+                        "endDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "End date of the reservation",
+                          "example": "2024-09-15T11:00:00Z"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation date of the reservation",
+                          "example": "2024-09-15T09:00:00Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Last update date of the reservation",
+                          "example": "2024-09-15T09:00:00Z"
+                        },
+                        "service": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the service",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Name of the service",
+                              "example": "Consulting"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Description of the service",
+                              "example": "Expert consulting in technology and business strategies."
+                            },
+                            "duration": {
+                              "type": "string",
+                              "description": "Duration of the service",
+                              "example": "2h"
+                            },
+                            "price": {
+                              "type": "integer",
+                              "description": "Price of the service",
+                              "example": 500
+                            }
+                          }
+                        },
+                        "business": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the business",
+                              "example": 10
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "First name of the business owner",
+                              "example": "Alice"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Last name of the business owner",
+                              "example": "Smith"
+                            },
+                            "city": {
+                              "type": "string",
+                              "description": "City where the business is located",
+                              "example": "New York"
+                            },
+                            "country": {
+                              "type": "string",
+                              "description": "Country where the business is located",
+                              "example": "USA"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "description": "Phone number of the business",
+                              "example": "1234567890"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email address of the business",
+                              "example": "alice@business.com"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Role of the user",
+                              "example": "business"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Status of the user",
+                              "example": "active"
+                            }
+                          }
+                        },
+                        "customer": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the customer",
+                              "example": 20
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "First name of the customer",
+                              "example": "Bob"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Last name of the customer",
+                              "example": "Johnson"
+                            },
+                            "city": {
+                              "type": "string",
+                              "description": "City where the customer is located",
+                              "example": "Los Angeles"
+                            },
+                            "country": {
+                              "type": "string",
+                              "description": "Country where the customer is located",
+                              "example": "USA"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "description": "Phone number of the customer",
+                              "example": "9876543210"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email address of the customer",
+                              "example": "bob@customer.com"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Role of the user",
+                              "example": "customer"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Status of the user",
+                              "example": "active"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/reservations/{id}": {
+      "patch": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Updates a reservation by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "ID of the reservation to update",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "description": "Status of the reservation",
+                    "enum": [
+                      "Pending",
+                      "Confirmed",
+                      "In Process",
+                      "Completed",
+                      "Canceled",
+                      "No Show",
+                      "Rescheduled"
+                    ],
+                    "example": "Confirmed"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Start date of the reservation",
+                    "example": "2024-09-16T10:00:00Z"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "End date of the reservation",
+                    "example": "2024-09-16T11:00:00Z"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reservation updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the reservation has been updated",
+                      "example": "Reservation updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the reservation",
+                          "example": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "Status of the reservation",
+                          "example": "Confirmed"
+                        },
+                        "startDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Start date of the reservation",
+                          "example": "2024-09-16T10:00:00Z"
+                        },
+                        "endDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "End date of the reservation",
+                          "example": "2024-09-16T11:00:00Z"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Creation date of the reservation",
+                          "example": "2024-09-15T09:00:00Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Last update date of the reservation",
+                          "example": "2024-09-15T10:00:00Z"
+                        },
+                        "service": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the service",
+                              "example": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "description": "Name of the service",
+                              "example": "Consulting"
+                            },
+                            "description": {
+                              "type": "string",
+                              "description": "Description of the service",
+                              "example": "Expert consulting in technology and business strategies."
+                            },
+                            "duration": {
+                              "type": "string",
+                              "description": "Duration of the service",
+                              "example": "2h"
+                            },
+                            "price": {
+                              "type": "integer",
+                              "description": "Price of the service",
+                              "example": 500
+                            }
+                          }
+                        },
+                        "business": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the business",
+                              "example": 10
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "First name of the business owner",
+                              "example": "Alice"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Last name of the business owner",
+                              "example": "Smith"
+                            },
+                            "city": {
+                              "type": "string",
+                              "description": "City where the business is located",
+                              "example": "New York"
+                            },
+                            "country": {
+                              "type": "string",
+                              "description": "Country where the business is located",
+                              "example": "USA"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "description": "Phone number of the business",
+                              "example": "1234567890"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email address of the business",
+                              "example": "alice@business.com"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Role of the user",
+                              "example": "business"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Status of the user",
+                              "example": "active"
+                            }
+                          }
+                        },
+                        "customer": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "ID of the customer",
+                              "example": 20
+                            },
+                            "firstName": {
+                              "type": "string",
+                              "description": "First name of the customer",
+                              "example": "Bob"
+                            },
+                            "lastName": {
+                              "type": "string",
+                              "description": "Last name of the customer",
+                              "example": "Johnson"
+                            },
+                            "city": {
+                              "type": "string",
+                              "description": "City where the customer is located",
+                              "example": "Los Angeles"
+                            },
+                            "country": {
+                              "type": "string",
+                              "description": "Country where the customer is located",
+                              "example": "USA"
+                            },
+                            "phoneNumber": {
+                              "type": "string",
+                              "description": "Phone number of the customer",
+                              "example": "9876543210"
+                            },
+                            "email": {
+                              "type": "string",
+                              "description": "Email address of the customer",
+                              "example": "bob@customer.com"
+                            },
+                            "role": {
+                              "type": "string",
+                              "description": "Role of the user",
+                              "example": "customer"
+                            },
+                            "status": {
+                              "type": "string",
+                              "description": "Status of the user",
+                              "example": "active"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "description": "You are not authorized to update this reservation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating unauthorized access",
+                      "example": "You are not authorized to update this reservation"
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "Additional data (null in this case)",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reservation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating that the reservation was not found",
+                      "example": "Reservation not found"
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "Additional data (null in this case)",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/services": {
+      "post": {
+        "tags": ["Services"],
+        "summary": "Create a new service",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the service",
+                    "example": "Consulting"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the service",
+                    "example": "Expert consulting in technology and business strategies."
+                  },
+                  "duration": {
+                    "type": "string",
+                    "description": "Duration of the service",
+                    "example": "2h"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "description": "Price of the service",
+                    "example": 500
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "duration",
+                  "price"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Service created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the service has been created",
+                      "example": "Service created successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the created service",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the created service",
+                          "example": "Consulting"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the created service",
+                          "example": "Expert consulting in technology and business strategies."
+                        },
+                        "duration": {
+                          "type": "string",
+                          "description": "Duration of the created service",
+                          "example": "2h"
+                        },
+                        "price": {
+                          "type": "integer",
+                          "description": "Price of the created service",
+                          "example": 500
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "description",
+                        "duration",
+                        "price"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/services/{id}": {
+      "patch": {
+        "tags": ["Services"],
+        "summary": "Update an existing service",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "ID of the service to be updated",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Updated name of the service",
+                    "example": "Consulting"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Updated description of the service",
+                    "example": "Expert consulting in technology and business strategies."
+                  },
+                  "duration": {
+                    "type": "string",
+                    "description": "Updated duration of the service",
+                    "example": "2h"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "description": "Updated price of the service",
+                    "example": 500
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "duration",
+                  "price"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Service updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the service has been updated",
+                      "example": "Service updated successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "description": "ID of the created service",
+                          "example": 1
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Name of the created service",
+                          "example": "Consulting"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Description of the created service",
+                          "example": "Expert consulting in technology and business strategies."
+                        },
+                        "duration": {
+                          "type": "string",
+                          "description": "Duration of the created service",
+                          "example": "2h"
+                        },
+                        "price": {
+                          "type": "integer",
+                          "description": "Price of the created service",
+                          "example": 500
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "description",
+                        "duration",
+                        "price"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating that the service was not found",
+                      "example": "Service not found"
+                    },
+                    "data": {
+                      "type": "null",
+                      "description": "Additional data (null in this case)",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Services"],
+        "summary": "Delete a service by ID",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "description": "ID of the service to be deleted",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Service deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the service has been deleted",
+                      "example": "Service deleted successfully"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Service not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message indicating the service was not found",
+                      "example": "Service not found"
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Additional details about the error",
+                      "example": null
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        }
+      }
+    },
+    "/shared/countries": {
+      "get": {
+        "tags": ["Shared"],
+        "summary": "Fetch a list of countries",
+        "responses": {
+          "200": {
+            "description": "Countries fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating the countries have been fetched",
+                      "example": "Countries fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "ISO": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-2 code of the country",
+                            "example": "AD"
+                          },
+                          "ISO3": {
+                            "type": "string",
+                            "description": "ISO 3166-1 alpha-3 code of the country",
+                            "example": "AND"
+                          },
+                          "ISO_Numeric": {
+                            "type": "string",
+                            "description": "ISO 3166-1 numeric code of the country",
+                            "example": "020"
+                          },
+                          "fips": {
+                            "type": "string",
+                            "description": "FIPS code of the country",
+                            "example": "AN"
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "Name of the country",
+                            "example": "Andorra"
+                          },
+                          "capital": {
+                            "type": "string",
+                            "description": "Capital city of the country",
+                            "example": "Andorra la Vella"
+                          },
+                          "area": {
+                            "type": "string",
+                            "description": "Area of the country in square kilometers",
+                            "example": "468"
+                          },
+                          "Population": {
+                            "type": "string",
+                            "description": "Population of the country",
+                            "example": "84000"
+                          },
+                          "Continent": {
+                            "type": "string",
+                            "description": "Continent where the country is located",
+                            "example": "EU"
+                          },
+                          "tld": {
+                            "type": "string",
+                            "description": "Top-level domain for the country",
+                            "example": ".ad"
+                          },
+                          "CurrencyCode": {
+                            "type": "string",
+                            "description": "Currency code used in the country",
+                            "example": "EUR"
+                          },
+                          "CurrencyName": {
+                            "type": "string",
+                            "description": "Name of the currency used in the country",
+                            "example": "Euro"
+                          },
+                          "Phone": {
+                            "type": "string",
+                            "description": "Phone dialing code for the country",
+                            "example": "376"
+                          },
+                          "Postal_Code_Format": {
+                            "type": "string",
+                            "description": "Postal code format used in the country",
+                            "example": "AD###"
+                          },
+                          "Postal_Code_Regex": {
+                            "type": "string",
+                            "description": "Regular expression for postal codes in the country",
+                            "example": "^(?:AD)*(\\d{3})$"
+                          },
+                          "Languages": {
+                            "type": "string",
+                            "description": "Languages spoken in the country",
+                            "example": "ca"
+                          },
+                          "geonameid": {
+                            "type": "string",
+                            "description": "Geoname ID for the country",
+                            "example": "3041565"
+                          },
+                          "neighbours": {
+                            "type": "string",
+                            "description": "Comma-separated list of neighboring countries",
+                            "example": "ES,FR"
+                          },
+                          "EquivalentFipsCode": {
+                            "type": "string",
+                            "description": "Equivalent FIPS code",
+                            "example": ""
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "data"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shared/cities/{country}": {
+      "get": {
+        "tags": ["Shared"],
+        "summary": "Fetches cities based on the specified country",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "country",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The country code to fetch cities for"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cities fetched successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Success message indicating that cities were fetched",
+                      "example": "Cities fetched successfully"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "geonameid": {
+                            "type": "string",
+                            "description": "Geoname ID of the city",
+                            "example": "3039154"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the city",
+                            "example": "El Tarter"
+                          },
+                          "asciiname": {
+                            "type": "string",
+                            "description": "ASCII name of the city",
+                            "example": "El Tarter"
+                          },
+                          "alternatenames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Alternate names of the city",
+                            "example": [
+                              "Ehl Tarter",
+                              "Эл Тартер"
+                            ]
+                          },
+                          "latitude": {
+                            "type": "string",
+                            "description": "Latitude of the city",
+                            "example": "42.57952"
+                          },
+                          "longitude": {
+                            "type": "string",
+                            "description": "Longitude of the city",
+                            "example": "1.65362"
+                          },
+                          "feature_class": {
+                            "type": "string",
+                            "description": "Feature class of the city",
+                            "example": "P"
+                          },
+                          "feature_code": {
+                            "type": "string",
+                            "description": "Feature code of the city",
+                            "example": "PPL"
+                          },
+                          "country_code": {
+                            "type": "string",
+                            "description": "Country code of the city",
+                            "example": "AD"
+                          },
+                          "population": {
+                            "type": "string",
+                            "description": "Population of the city",
+                            "example": "1052"
+                          },
+                          "timezone": {
+                            "type": "string",
+                            "description": "Timezone of the city",
+                            "example": "Europe/Andorra"
+                          },
+                          "modification_date": {
+                            "type": "string",
+                            "format": "date",
+                            "description": "Date when the city information was last modified",
+                            "example": "2012-11-03"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

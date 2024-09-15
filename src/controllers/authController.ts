@@ -67,21 +67,17 @@ export const register = async (req: Request, res: Response): Promise<Response> =
 };
 
 export async function refreshToken(req: Request, res: Response): Promise<Response> {
-  const { refreshToken } = req.body;
+  const rawToken = req.headers.authorization.split(' ')[1];
+  const payload = decodeToken(rawToken, 'refresh');
 
-  if (!refreshToken) {
-    return sendResponse(res, 'No refresh token provided', null, 400);
+  if (!payload) {
+    return sendResponse(res, 'Make sure you have a valid refresh token, not a valid access token', null, 401);
   }
-
-  const isValid = verifyToken(refreshToken);
   
-  if (!isValid) {
-    return sendResponse(res, 'Invalid refresh token', null, 401);
-  }
+  const { id, email } = payload;
 
-  const payload = decodeToken(refreshToken, 'refresh');
-  const newAccessToken = generateToken(payload);
-  const newRefreshToken = generateToken(payload, 'refresh');
+  const newAccessToken = generateToken({ id, email });
+  const newRefreshToken = generateToken({ id, email }, 'refresh');
 
   return sendResponse(
     res,
@@ -100,7 +96,7 @@ export const verifyEmail = async (req: Request, res: Response): Promise<Response
 
   const isValid = verifyToken(token as string, 'verify');
   if (!isValid) {
-    return sendResponse(res, 'Invalid token a', null, 401);
+    return sendResponse(res, 'Invalid token', null, 401);
   }
 
   const savedToken = await tokenRepository.findOne({ where: { value: token as string } });
@@ -147,9 +143,9 @@ export const resendVerificationEmail = async (req: RequestWithUser, res: Respons
   return sendResponse(res, 'Email sent successfully', null, 200);
 };
 
-export const logout = (req: Request, res: Response): void => {
+export const logout = (_req: Request, res: Response): Response => {
   // TODO: implement redis cache to storage unauthorized tokens and refresh tokens
-  res.status(200).send('Logged out successfully');
+  return sendResponse(res, 'Logged out successfully', null, 200);
 };
 
 export const forgotPassword = async (req: Request, res: Response): Promise<Response> => {

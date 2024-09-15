@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -17,7 +18,6 @@ import servicesRoutes from './routes/servicesRoutes';
 import profileRoutes from './routes/profileRoutes';
 import sharedRoutes from './routes/sharedRoutes';
 import authRoutes from './routes/authRoutes';
-import swaggerSpec from './swaggerConfig';
 
 import { errorMiddleware } from './middlewares';
 import { AppDataSource } from './data-source';
@@ -60,9 +60,14 @@ import { AppDataSource } from './data-source';
   app.use('/services', servicesRoutes);
   app.use('/companies', companiesRoutes);
 
+  // Swagger - Documentation
+  const swaggerDocumentPath = path.join(__dirname, '..', 'swagger.json');
+  const swaggerDocument = JSON.parse(fs.readFileSync(swaggerDocumentPath, 'utf8'));
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+  // Health checks
   app.get('/', (_, res) => res.send('🚀 The server is running smoothly! 🌟'));
   app.get('/health', (_, res) => res.send({ database: AppDataSource.isInitialized }));
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
   app.listen(PORT, () => console.log(`🚀🎉 The server is up and running on port ${PORT}! 🎉🚀`));
 })();

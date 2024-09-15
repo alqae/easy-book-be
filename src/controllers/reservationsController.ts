@@ -11,8 +11,11 @@ const serviceRepository = AppDataSource.getRepository(Service);
 const userRepository = AppDataSource.getRepository(User);
 
 export const getReservations = async (req: Request, res: Response): Promise<Response<Reservation[]>> => {
-  const reservations = await reservationRepository.find({ where: { customer: { id: req.user.id } } });
-  return sendResponse(res, 'Reservations fetched successfully', reservations, 200);
+  const reservations = await reservationRepository.find({
+    where: { customer: { id: req.user.id } },
+    relations: ['customer', 'business', 'service']
+  });
+  return sendResponse(res, 'Reservations fetched successfully', cleanKeys(reservations), 200);
 };
 
 export const createReservation = async (req: RequestWithUser, res: Response): Promise<Response<Reservation>> => {
@@ -31,7 +34,7 @@ export const createReservation = async (req: RequestWithUser, res: Response): Pr
 
   const savedReservation = await reservationRepository.save(reservation);
 
-  return sendResponse(res, 'Reservation created successfully', savedReservation, 201);  
+  return sendResponse(res, 'Reservation created successfully', cleanKeys(savedReservation), 201);  
 };
 
 export const updateReservation = async (req: RequestWithUser, res: Response): Promise<Response<Reservation>> => {

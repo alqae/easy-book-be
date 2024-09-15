@@ -11,15 +11,6 @@ import {
 
 const authRouter = Router();
 
-/**
- * @swagger
- * /auth:
- *   get:
- *     summary: Obtiene un ejemplo
- *     responses:
- *       200:
- *         description: Ejemplo obtenido exitosamente
- */
 authRouter.post('/login', authenticateValidation, validateRequest, guestMiddleware, authController.login);
 authRouter.post('/logout', authenticatedMiddleware, authController.logout);
 authRouter.post('/refresh-token', authenticatedMiddleware, authController.refreshToken);

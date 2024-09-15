@@ -11,7 +11,14 @@ const userRepository = AppDataSource.getRepository(User);
 export const whoAmI = async (req: RequestWithUser, res: Response): Promise<Response<User>> => {
   const me = await userRepository.findOne({
     where: { email: req.user.email },
-    relations: ['customerReservations', 'businessReservations', 'services', 'avatar'],
+    relations: [
+      'customerReservations',
+      'customerReservations.service',
+      'businessReservations',
+      'businessReservations.service',
+      'services',
+      'avatar'
+    ],
   });
 
   return sendResponse(res, 'Profile fetched successfully', cleanKeys(me), 200);

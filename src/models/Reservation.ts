@@ -30,15 +30,15 @@ export class Reservation {
   @Column({ type: 'timestamp' })
   endDate: Date;
 
-  @OneToOne(() => User, { lazy: true })
+  @OneToOne(() => User, { lazy: true, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'businessId' })
   business: User;
 
-  @OneToOne(() => User, { lazy: true })
+  @OneToOne(() => User, { lazy: true, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'customerId' })
   customer: User;
 
-  @OneToOne(() => Service, { lazy: true })
+  @OneToOne(() => Service, { lazy: true, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'serviceId' })
   service: Service;
 

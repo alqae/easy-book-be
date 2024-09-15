@@ -36,6 +36,6 @@ export const updatePasswordValidation = [
 export const updateRoleValidation = [
   body('role')
     .notEmpty()
-    .isIn(Object.values(UserRole))
+    .isIn(Object.values(UserRole)) // customer, business, employee or admin
     .withMessage(`Role must be one of the following: ${Object.values(UserRole).join(', ')}`),
 ];

@@ -36,16 +36,19 @@ export class CreateReservations1726362321867 implements MigrationInterface {
         {
           name: 'businessId',
           type: 'int',
+          isUnique: false,
           isNullable: true,
         },
         {
           name: 'customerId',
           type: 'int',
+          isUnique: false,
           isNullable: true,
         },
         {
           name: 'serviceId',
           type: 'int',
+          isUnique: false,
           isNullable: true,
         }
       ],

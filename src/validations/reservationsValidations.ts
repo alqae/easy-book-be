@@ -17,7 +17,7 @@ export const createReservationValidation = [
 export const updateReservationValidation = [
   body('status')
     .optional()
-    .isIn(Object.values(ReservationStatus))
+    .isIn(Object.values(ReservationStatus)) // Pending, Confirmed, In Process, Completed, Canceled, No Show, Rescheduled
     .withMessage(`Role must be one of the following: ${Object.values(ReservationStatus).join(', ')}`),
   body('startDate')
     .notEmpty()
