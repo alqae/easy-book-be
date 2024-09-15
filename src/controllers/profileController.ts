@@ -8,8 +8,13 @@ import { User } from '../models';
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const whoAmI = (req: RequestWithUser, res: Response): void => {
-  sendResponse(res, ':)', req.user);
+export const whoAmI = async (req: RequestWithUser, res: Response): Promise<Response<User>> => {
+  const me = await userRepository.findOne({
+    where: { email: req.user.email },
+    relations: ['customerReservations', 'businessReservations', 'services']
+  });
+
+  return sendResponse(res, 'Profile fetched successfully', me, 200);
 };
 
 export const updateProfile = async (req: RequestWithUser, res: Response): Promise<Response> => {

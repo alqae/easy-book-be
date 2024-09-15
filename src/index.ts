@@ -1,8 +1,9 @@
+import 'dotenv/config';
+
 import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
 import express from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
@@ -10,17 +11,16 @@ import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
 
-dotenv.config();
-
 import reservationsRoutes from './routes/reservationsRoutes';
 import companiesRoutes from './routes/companiesRoutes';
 import servicesRoutes from './routes/servicesRoutes';
 import profileRoutes from './routes/profileRoutes';
 import sharedRoutes from './routes/sharedRoutes';
 import authRoutes from './routes/authRoutes';
+import swaggerSpec from './swaggerConfig';
+
 import { errorMiddleware } from './middlewares';
 import { AppDataSource } from './data-source';
-import swaggerSpec from './swaggerConfig';
 
 (async () => {
   const app = express();

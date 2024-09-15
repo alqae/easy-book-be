@@ -139,3 +139,42 @@ export const sendEmail = async (
     html,
   });
 }
+
+/**
+ * Recursively cleans object keys by removing leading and trailing double underscores,
+ * except for fields that are dates like 'createdAt' and 'updatedAt'.
+ * Only cleans keys that have double underscores at the beginning or end.
+ * If the value is an object, it recursively cleans the keys of nested objects.
+ *
+ * @template T - The type of the object to clean.
+ * @param {T} obj - The object whose keys should be cleaned.
+ * @returns {T} - A new object with cleaned keys, maintaining the original structure.
+ */
+export const cleanKeys = <T extends Record<string, any>>(obj: T): T => {
+  const newObj: Record<string, any> = {};
+
+  // Iterate through all the keys of the object
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      // Skip date fields like 'createdAt' and 'updatedAt'
+      if (key === 'createdAt' || key === 'updatedAt') {
+        newObj[key] = obj[key];
+        continue;
+      }
+
+      // Check if the key has double underscores at the beginning or end
+      const cleanKey = key.match(/^__|__$/g) ? key.replace(/^__|__$/g, '') : key;
+
+      // If the value is a nested object (not an array), apply the function recursively
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+        newObj[cleanKey] = cleanKeys(obj[key]);  // Recursive call for nested objects
+      } else {
+        // Otherwise, assign the value directly
+        newObj[cleanKey] = obj[key];
+      }
+    }
+  }
+
+  // Return the cleaned object with the same type as the input object
+  return newObj as T;
+};
