@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { PaginationResponse } from '../types/response';
 import { cleanKeys, sendResponse } from '../utils';
 import { AppDataSource } from '../data-source';
 import { UserRole } from '../types/enums';
@@ -7,7 +8,7 @@ import { User } from '../models';
 
 const userRepository = AppDataSource.getRepository(User);
 
-export const getCompanies = async (req: Request, res: Response): Promise<Response<User[]>> => {
+export const getCompanies = async (req: Request, res: Response): Promise<Response<PaginationResponse<User[]>>> => {
   let query = userRepository.createQueryBuilder('users')
     .where('users.role = :role', { role: UserRole.BUSINESS })
     .leftJoinAndSelect('users.avatar', 'avatar')
@@ -28,6 +29,8 @@ export const getCompanies = async (req: Request, res: Response): Promise<Respons
     query = query.andWhere('users.country = :country', { country });
   }
 
+  const count = await query.getCount();
+
   if (limit && offset) {
     query = query
       .limit(parseInt(limit as string))
@@ -36,7 +39,7 @@ export const getCompanies = async (req: Request, res: Response): Promise<Respons
 
   const companies = await query.getMany();
 
-  return sendResponse(res, 'Companies fetched successfully', cleanKeys(companies), 200);
+  return sendResponse(res, 'Companies fetched successfully', { items: cleanKeys(companies), count }, 200);
 }
 
 export const getCompany = async (req: Request, res: Response): Promise<Response<User>> => {

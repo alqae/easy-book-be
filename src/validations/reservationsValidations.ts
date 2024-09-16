@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 
 import { ReservationStatus } from '../types/enums';
 
@@ -25,4 +25,15 @@ export const updateReservationValidation = [
   body('endTime')
     .notEmpty()
     .withMessage('End time is required'),
+];
+
+export const getReservationsValidation = [
+  query('limit')
+    .optional()
+    .isNumeric()
+    .withMessage('Limit must be a number'),
+  query('offset')
+    .optional()
+    .isNumeric()
+    .withMessage('Offset must be a number'),
 ];
