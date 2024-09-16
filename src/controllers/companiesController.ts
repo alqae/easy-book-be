@@ -10,28 +10,33 @@ const userRepository = AppDataSource.getRepository(User);
 export const getCompanies = async (req: Request, res: Response): Promise<Response<User[]>> => {
   let query = userRepository.createQueryBuilder('users')
     .where('users.role = :role', { role: UserRole.BUSINESS })
+    .leftJoinAndSelect('users.avatar', 'avatar')
     .leftJoinAndSelect('users.services', 'services');
 
-  if (req.query.text) {
+  const { city, country, text, limit, offset } = req.query;
+
+  if (text) {
     query = query
-      .where('LOWER(CONCAT(users.firstName, users.lastName)) LIKE LOWER(:searchText)', { searchText: `%${req.query.text}%` })
+      .where('LOWER(CONCAT(users.firstName, users.lastName)) LIKE LOWER(:searchText)', { searchText: `%${text}%` })
   }
 
-  if (req.query.city) {
-    query = query.andWhere('users.city = :city', { city: req.query.city });
+  if (city) {
+    query = query.andWhere('users.city = :city', { city });
   }
 
-  if (req.query.country) {
-    query = query.andWhere('users.country = :country', { country: req.query.country });
+  if (country) {
+    query = query.andWhere('users.country = :country', { country });
   }
 
-  // TODO: implement pagination
-  // TODO: implement caching
+  if (limit && offset) {
+    query = query
+      .limit(parseInt(limit as string))
+      .offset(parseInt(offset as string));
+  }
 
-  let companies = await query.getMany();
-  companies = cleanKeys(companies);
+  const companies = await query.getMany();
 
-  return sendResponse(res, 'Companies fetched successfully', companies, 200);
+  return sendResponse(res, 'Companies fetched successfully', cleanKeys(companies), 200);
 }
 
 export const getCompany = async (req: Request, res: Response): Promise<Response<User>> => {
