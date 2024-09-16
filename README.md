@@ -21,7 +21,7 @@
 1. **Clona el repositorio:**
 
    ```bash
-   git clone https://github.com/tu-usuario/ease-book-fe.git
+   git clone https://github.com/alqae/ease-book-fe.git
    cd ease-book-fe
    ```
 
@@ -114,7 +114,7 @@ Este endpoint te proporcionará información sobre el estado actual de la aplica
 
 ## Contribuciones
 
-Las contribuciones son bienvenidas. Si tienes alguna sugerencia o encuentras un problema, por favor abre un [issue](https://github.com/tu-usuario/ease-book-fe/issues) o envía un [pull request](https://github.com/tu-usuario/ease-book-fe/pulls).
+Las contribuciones son bienvenidas. Si tienes alguna sugerencia o encuentras un problema, por favor abre un [issue](https://github.com/alqae/ease-book-fe/issues) o envía un [pull request](https://github.com/alqae/ease-book-fe/pulls).
 
 ## Licencia
 
