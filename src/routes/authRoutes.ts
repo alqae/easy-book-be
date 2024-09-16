@@ -1,7 +1,8 @@
 import { Router } from 'express';
 
-import { authenticatedMiddleware, guestMiddleware, validateRequest } from '../middlewares';
+import { authenticatedMiddleware, guestMiddleware, userStatusMiddleware, validateRequest } from '../middlewares';
 import * as authController from '../controllers/authController';
+import { UserStatus } from '../types/enums';
 import {
   authenticateValidation,
   registerValidation,
@@ -18,6 +19,6 @@ authRouter.post('/register', registerValidation, validateRequest, guestMiddlewar
 authRouter.post('/forgot-password', forgotPasswordValidation, validateRequest, guestMiddleware, authController.forgotPassword);
 authRouter.post('/reset-password', resetPasswordValidation, validateRequest, guestMiddleware, authController.resetPassword);
 authRouter.get('/verify-email', authController.verifyEmail);
-authRouter.post('/resend-verification-email', authenticatedMiddleware, authController.resendVerificationEmail);
+authRouter.post('/resend-verification-email', authenticatedMiddleware, userStatusMiddleware(UserStatus.UNVERIFIED), authController.resendVerificationEmail);
 
 export default authRouter;
