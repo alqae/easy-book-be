@@ -31,11 +31,13 @@ import { AppDataSource } from './data-source';
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser()); // To parse cookies
   app.use(cors({ // To allow CORS
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
   }));
-  app.use(helmet());
+  app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" }
+  }));
   app.use(compression());
   app.use(rateLimit({ // To prevent DDOS attacks
     windowMs: 15 * 60 * 1000, // 15 minutes
