@@ -16,7 +16,7 @@ export class Service {
   @Column({ type: 'varchar', length: 100 })
   duration: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'float' })
   price: number;
 
   @ManyToOne(() => User, (user) => user.services, { lazy: true })
