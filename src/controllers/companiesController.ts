@@ -45,7 +45,7 @@ export const getCompany = async (req: Request, res: Response): Promise<Response<
       id: parseInt(req.params.id),
       role: UserRole.BUSINESS
     },
-    relations: ['services']
+    relations: ['services', 'avatar']
   });
 
   if (!company) {
