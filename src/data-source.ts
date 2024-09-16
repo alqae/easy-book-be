@@ -8,6 +8,7 @@ import { CreateServicesTable1726353157605 } from './migrations/1726353157605-Cre
 import { CreateReservations1726362321867 } from './migrations/1726362321867-CreateReservations';
 import { UpdatePriceToFloat1726444212558 } from './migrations/1726444212558-UpdatePriceToFloat';
 import { CreateTokensTable1726353158074 } from './migrations/1726353158074-CreateTokensTable';
+import { AddAvatarToUsers1726372537668 } from './migrations/1726372537668-AddAvatarToUsers';
 import { CreateUsersTable1726353158584 } from './migrations/1726353158584-CreateUsersTable';
 import { AddTimestamps1726354582975 } from './migrations/1726354582975-AddTimestamps';
 import { User, Token, Attachment, Service, Reservation } from './models';
@@ -33,6 +34,7 @@ export const AppDataSource = new DataSource({
         CreateServicesTable1726353157605,
         CreateTokensTable1726353158074,
         CreateUsersTable1726353158584,
+        AddAvatarToUsers1726372537668,
         AddTimestamps1726354582975,
         CreateReservations1726362321867,
         UpdatePriceToFloat1726444212558

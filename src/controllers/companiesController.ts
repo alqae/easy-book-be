@@ -33,8 +33,8 @@ export const getCompanies = async (req: Request, res: Response): Promise<Respons
 
   if (limit && offset) {
     query = query
-      .limit(parseInt(limit as string))
-      .offset(parseInt(offset as string));
+      .take(parseInt(limit as string))
+      .skip(parseInt(offset as string));
   }
 
   const companies = await query.getMany();

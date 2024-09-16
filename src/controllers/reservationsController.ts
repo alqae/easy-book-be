@@ -40,8 +40,9 @@ export const getReservations = async (req: Request, res: Response): Promise<Resp
 export const createReservation = async (req: RequestWithUser, res: Response): Promise<Response<Reservation>> => {
   const { startTime, endTime, serviceId } = req.body;
 
-  const business = await userRepository.findOne({ where: { id: req.user.id, role: UserRole.BUSINESS } });
-  const service = await serviceRepository.findOne({ where: { id: serviceId } });
+  const service = await serviceRepository.findOne({ where: { id: serviceId }, relations: ['user'] });
+  const business = await userRepository.findOne({ where: { id: service.user.id, role: UserRole.BUSINESS } });
+  
 
   const reservation = new Reservation();
   reservation.startTime = startTime;
