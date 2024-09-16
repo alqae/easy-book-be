@@ -32,7 +32,7 @@ import { AppDataSource } from './data-source';
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser()); // To parse cookies
   app.use(cors({ // To allow CORS
-    origin: 'http://localhost:5173',
+    origin: process.env.WEB_URL,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
   }));
