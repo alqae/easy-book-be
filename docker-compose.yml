@@ -11,6 +11,7 @@ services:
       - .env
     volumes:
       - .:/app
+      - uploads:/app/uploads
     command: >
       /bin/sh -c "./wait-for-it.sh db:${DB_PORT} -- yarn migrate:run && yarn start"
     depends_on:
@@ -35,6 +36,7 @@ services:
 
 volumes:
   db_data:
+  uploads:
 
 networks:
   easy_book_network:
