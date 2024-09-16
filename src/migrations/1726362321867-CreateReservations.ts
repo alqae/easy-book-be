@@ -20,11 +20,11 @@ export class CreateReservations1726362321867 implements MigrationInterface {
           default: `'Pending'`,
         },
         {
-          name: 'startDate',
+          name: 'startTime',
           type: 'timestamp',
         },
         {
-          name: 'endDate',
+          name: 'endTime',
           type: 'timestamp',
         },
         {

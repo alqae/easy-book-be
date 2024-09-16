@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, query } from 'express-validator';
 
 export const createServiceValidation = [
   body('name')
@@ -36,4 +36,13 @@ export const updateServiceValidation = [
     .notEmpty()
     .isNumeric()
     .withMessage('Price is required'),
+];
+
+export const getAviableHoursValidation = [
+  query('serviceId')
+    .notEmpty()
+    .withMessage('Service is required'),
+  query('date')
+    .notEmpty()
+    .withMessage('Date is required'),
 ];

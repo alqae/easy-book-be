@@ -3,10 +3,10 @@ import { body } from 'express-validator';
 import { ReservationStatus } from '../types/enums';
 
 export const createReservationValidation = [
-  body('startDate')
+  body('startTime')
     .notEmpty()
     .withMessage('Start date is required'),
-  body('endDate')
+  body('endTime')
     .notEmpty()
     .withMessage('End date is required'),
   body('serviceId')
@@ -19,10 +19,10 @@ export const updateReservationValidation = [
     .optional()
     .isIn(Object.values(ReservationStatus)) // Pending, Confirmed, In Process, Completed, Canceled, No Show, Rescheduled
     .withMessage(`Role must be one of the following: ${Object.values(ReservationStatus).join(', ')}`),
-  body('startDate')
+  body('startTime')
     .notEmpty()
-    .withMessage('Start date is required'),
-  body('endDate')
+    .withMessage('Start time is required'),
+  body('endTime')
     .notEmpty()
-    .withMessage('End date is required'),
+    .withMessage('End time is required'),
 ];

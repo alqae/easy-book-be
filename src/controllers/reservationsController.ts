@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 
 import { ReservationStatus, UserRole } from '../types/enums';
 import { Reservation, Service, User } from '../models';
+import { cleanKeys, sendResponse } from '../utils';
 import { RequestWithUser } from '../types/express';
 import { AppDataSource } from '../data-source';
-import { cleanKeys, sendResponse } from '../utils';
 
 const reservationRepository = AppDataSource.getRepository(Reservation);
 const serviceRepository = AppDataSource.getRepository(Service);
@@ -19,14 +19,14 @@ export const getReservations = async (req: Request, res: Response): Promise<Resp
 };
 
 export const createReservation = async (req: RequestWithUser, res: Response): Promise<Response<Reservation>> => {
-  const { startDate, endDate, serviceId } = req.body;
+  const { startTime, endTime, serviceId } = req.body;
 
   const business = await userRepository.findOne({ where: { id: req.user.id, role: UserRole.BUSINESS } });
   const service = await serviceRepository.findOne({ where: { id: serviceId } });
 
   const reservation = new Reservation();
-  reservation.startDate = startDate;
-  reservation.endDate = endDate;
+  reservation.startTime = startTime;
+  reservation.endTime = endTime;
   reservation.service = service;
   reservation.customer = req.user;
   reservation.business = business;

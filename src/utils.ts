@@ -163,3 +163,24 @@ export const cleanKeys = (input: any): any => {
   }
   return input;
 };
+
+/**
+ * Parses a duration string into minutes.
+ * 
+ * The string should be in one of the formats: <number>h, <number>m, <number>h <number>m.
+ * 
+ * @param {string} duration - The duration string to parse.
+ * @returns {number} - The parsed duration in minutes.
+ * 
+ * @example
+ * parseDuration('1h 30m'); // 90
+ * parseDuration('30m'); // 30
+ * parseDuration('1h'); // 60
+ */
+export const parseDuration = (duration: string): number => {
+  const hoursMatch = duration.match(/(\d+)h/);
+  const minutesMatch = duration.match(/(\d+)m/);
+  const hours = hoursMatch ? parseInt(hoursMatch[1]) : 0;
+  const minutes = minutesMatch ? parseInt(minutesMatch[1]) : 0;
+  return hours * 60 + minutes;
+};

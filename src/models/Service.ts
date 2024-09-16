@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 
 import { User } from './User';
+import { Reservation } from './Reservation';
 
 @Entity('services')
 export class Service {
@@ -21,4 +22,7 @@ export class Service {
 
   @ManyToOne(() => User, (user) => user.services, { lazy: true })
   user: User;
+
+  @OneToMany(() => Reservation, (reservation) => reservation.service)
+  reservations: Reservation[];
 }

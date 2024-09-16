@@ -25,10 +25,10 @@ export class Reservation {
   status: ReservationStatus;
 
   @Column({ type: 'timestamp' })
-  startDate: Date;
+  startTime: Date;
 
   @Column({ type: 'timestamp' })
-  endDate: Date;
+  endTime: Date;
 
   @OneToOne(() => User, { lazy: true, createForeignKeyConstraints: false })
   @JoinColumn({ name: 'businessId' })
