@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 
 import { EmailTemplate, TokenStatus, TokenType, UserStatus } from '../types/enums';
+import { User, Token, UserPayload } from '../models';
 import { RequestWithUser } from '../types/express';
 import { AppDataSource } from '../data-source';
-import { User, Token } from '../models';
 import {
   decodeToken,
   generateToken,
@@ -19,10 +19,16 @@ const tokenRepository = AppDataSource.getRepository(Token);
 export const login = async (req: Request, res: Response): Promise<Response> => {
   const { email, password } = req.body;
 
-  const user = await userRepository.findOne({ where: { email }, select: ['id', 'email', 'password'] });
+  const user = await userRepository.findOne({ where: { email }, select: ['id', 'email', 'password', 'status'] });
 
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return sendResponse(res, 'Bad credentials', null, 401);
+  }
+
+  const allowedUserStatusToLogin = [UserStatus.ACTIVE, UserStatus.UNVERIFIED];
+
+  if (!allowedUserStatusToLogin.includes(user.status)) {
+    return sendResponse(res, 'Only active users can login', null, 401);
   }
 
   const token = generateToken({ id: user.id, email: user.email });
@@ -64,8 +70,15 @@ export const register = async (req: Request, res: Response): Promise<Response> =
 };
 
 export async function refreshToken(req: Request, res: Response): Promise<Response> {
-  const rawToken = req.headers.authorization.split(' ')[1];
-  const payload = decodeToken(rawToken, 'refresh');
+  let payload: UserPayload;
+  let accessToken = (req.headers['authorization'] as string).split(' ')[1];
+  let refreshToken = req.headers['refresh-token'] as string;
+
+  if (refreshToken) {
+    payload = decodeToken(refreshToken, 'refresh');
+  } else {
+    payload = decodeToken(accessToken, 'access');
+  }
 
   if (!payload) {
     return sendResponse(res, 'Make sure you have a valid refresh token, not a valid access token', null, 401);
@@ -86,6 +99,7 @@ export async function refreshToken(req: Request, res: Response): Promise<Respons
 
 export const verifyEmail = async (req: Request, res: Response): Promise<Response> => {
   const { token } = req.query;
+
 
   if (!token) {
     return sendResponse(res, 'No token provided', null, 400);

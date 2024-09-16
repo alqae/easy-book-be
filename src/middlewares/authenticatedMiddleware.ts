@@ -14,7 +14,7 @@ export const authenticatedMiddleware = async (
   }
 
   const result = verifyToken(token);
-  
+
   if (result) {
     const payload = decodeToken(token);
     const userRepository = AppDataSource.getRepository(User);
@@ -23,6 +23,6 @@ export const authenticatedMiddleware = async (
     (req as RequestWithUser).user = user;
     next();
   } else {
-    sendResponse(res, 'Unauthorized', null, 401);
+    return sendResponse(res, 'Unauthorized', null, 401);
   }
 }
