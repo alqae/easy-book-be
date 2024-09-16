@@ -1422,6 +1422,38 @@
             "$ref": "#/components/responses/UnauthorizedError"
           }
         }
+      },
+      "delete": {
+        "summary": "Delete user profile",
+        "description": "This endpoint changes the user's profile status to 'inactive'. It does not permanently delete the profile.",
+        "tags": ["Profile"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile status changed to inactive",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Profile has been set to inactive."
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/profile/password": {
