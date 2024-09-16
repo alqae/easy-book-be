@@ -15,6 +15,7 @@ import swaggerUi from 'swagger-ui-express';
 import reservationsRoutes from './routes/reservationsRoutes';
 import companiesRoutes from './routes/companiesRoutes';
 import servicesRoutes from './routes/servicesRoutes';
+import customerRoutes from './routes/customerRoutes';
 import profileRoutes from './routes/profileRoutes';
 import sharedRoutes from './routes/sharedRoutes';
 import authRoutes from './routes/authRoutes';
@@ -61,6 +62,7 @@ import { AppDataSource } from './data-source';
   app.use('/shared', sharedRoutes);
   app.use('/services', servicesRoutes);
   app.use('/companies', companiesRoutes);
+  app.use('/customers', customerRoutes);
 
   // Swagger - Documentation
   const swaggerDocumentPath = path.join(__dirname, '..', 'swagger.json');
