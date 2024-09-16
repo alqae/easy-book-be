@@ -20,11 +20,13 @@ export const updateReservationValidation = [
     .isIn(Object.values(ReservationStatus)) // Pending, Confirmed, In Process, Completed, Canceled, No Show, Rescheduled
     .withMessage(`Role must be one of the following: ${Object.values(ReservationStatus).join(', ')}`),
   body('startTime')
-    .notEmpty()
-    .withMessage('Start time is required'),
+    .optional()
+    .isString()
+    .withMessage('Start time must be a string'),
   body('endTime')
-    .notEmpty()
-    .withMessage('End time is required'),
+    .optional()
+    .isString()
+    .withMessage('End time must be a string'),
 ];
 
 export const getReservationsValidation = [
