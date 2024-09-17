@@ -1,12 +1,12 @@
 services:
-  app:
+  api:
     container_name: easy_book_be
     restart: always
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8080"
     env_file:
       - .env
     volumes:
@@ -14,6 +14,15 @@ services:
       - uploads:/app/uploads
     command: >
       /bin/sh -c "./wait-for-it.sh db:${DB_PORT} -- yarn migrate:run && yarn start"
+    depends_on:
+      - db
+    networks:
+      - easy_book_network
+
+  adminer:
+    image: adminer:4.8.1-standalone
+    container_name: easy_book_adminer
+    restart: always
     depends_on:
       - db
     networks:
