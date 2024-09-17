@@ -33,10 +33,7 @@ import { AppDataSource } from './data-source';
   app.use(cookieParser()); // To parse cookies
   // Disable CORS because we are using a proxy server
   app.use(cors({ // To allow CORS
-    origin: [
-      'https://wwww.easybook.live', // For production
-      'http://localhost:5173', // For local development
-    ],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
   }));
