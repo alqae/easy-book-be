@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 import fs from 'fs';
 import path from 'path';
-// import cors from 'cors';
+import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import express from 'express';
@@ -32,11 +32,14 @@ import { AppDataSource } from './data-source';
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser()); // To parse cookies
   // Disable CORS because we are using a proxy server
-  // app.use(cors({ // To allow CORS
-  //   origin: process.env.WEB_URL,
-  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  //   allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
-  // }));
+  app.use(cors({ // To allow CORS
+    origin: [
+      'https://wwww.easybook.live', // For production
+      'http://localhost:5173', // For local development
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
+  }));
   app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
   }));
