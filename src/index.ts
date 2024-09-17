@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 import fs from 'fs';
 import path from 'path';
-import cors from 'cors';
+// import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import express from 'express';
@@ -31,11 +31,11 @@ import { AppDataSource } from './data-source';
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser()); // To parse cookies
-  app.use(cors({ // To allow CORS
-    origin: process.env.WEB_URL,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
-  }));
+  // app.use(cors({ // To allow CORS
+  //   origin: process.env.WEB_URL,
+  //   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  //   allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
+  // }));
   app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" }
   }));
