@@ -53,7 +53,7 @@ import { AppDataSource } from './data-source';
   // Configuring TypeORM
   await AppDataSource.initialize();
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
   // Routes
   app.use('/auth', authRoutes);
@@ -73,5 +73,5 @@ import { AppDataSource } from './data-source';
   app.get('/', (_, res) => res.send('🚀 The server is running smoothly! 🌟'));
   app.get('/health', (_, res) => res.send({ database: AppDataSource.isInitialized }));
 
-  app.listen(PORT, () => console.log(`🚀🎉 The server is up and running on port ${PORT}! 🎉🚀`));
+  app.listen(PORT, '0.0.0.0', () => console.log(`🚀🎉 The server is up and running on port ${PORT}! 🎉🚀`));
 })();
