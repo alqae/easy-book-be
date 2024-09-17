@@ -5,6 +5,5 @@ build/
 tmp/
 temp/
 package-lock.json
-yarn.lock
 .env
 uploads/
