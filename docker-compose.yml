@@ -7,8 +7,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8080"
-    env_file:
-      - .env
+    environment:
+      - PORT=${PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_FROM=${SMTP_FROM}
+      - APP_URL=${APP_URL}
+      - WEB_URL=${WEB_URL}
     volumes:
       - .:/app
       - uploads:/app/uploads
