@@ -32,7 +32,7 @@ import { AppDataSource } from './data-source';
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser()); // To parse cookies
   app.use(cors({ // To allow CORS
-    origin: process.env.WEB_URL,
+    origin: ['https://www.easybook.live/', 'https://easybook.live/', 'http://localhost:5173', 'http://127.0.0.1:5173'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Refresh-Token'],
   }));
