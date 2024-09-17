@@ -79,13 +79,13 @@ Para gestionar las migraciones de la base de datos, utiliza los siguientes coman
 
 La API está documentada usando Swagger. Para explorar la documentación interactiva, accede a la siguiente URL en tu navegador:
 
-- [/docs](http://localhost:8080/docs)
+- [/docs](http://localhost:8000/docs)
 
 ## Health Check
 
 Para verificar el estado de la aplicación, accede al siguiente endpoint en tu navegador:
 
-- [/health](http://localhost:8080/health)
+- [/health](http://localhost:8000/health)
 
 ## Carga de Datos Iniciales
 
