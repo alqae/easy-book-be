@@ -20,4 +20,4 @@ COPY .env.example .env
 EXPOSE 8080
 
 # Start the application
-CMD ["yarn", "start"]
+CMD ["/bin/sh", "-c", "./wait-for-it.sh db:${DB_PORT} -- yarn migrate:run && yarn start"]
