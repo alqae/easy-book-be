@@ -53,7 +53,7 @@ import { AppDataSource } from './data-source';
   // Configuring TypeORM
   await AppDataSource.initialize();
 
-  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 8000;
 
   // Routes
   app.use('/auth', authRoutes);

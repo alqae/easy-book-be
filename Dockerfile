@@ -17,7 +17,7 @@ COPY . .
 COPY .env.example .env
 
 # Expose the application port
-EXPOSE 8080
+EXPOSE 8000
 
 # Start the application
 CMD ["/bin/sh", "-c", "./wait-for-it.sh db:${DB_PORT} -- yarn migrate:run && yarn start"]
